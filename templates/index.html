@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediksi Skor Siswa</title>
+    <style>
+        body { 
+            font-family: 'Arial', sans-serif;
+            background-color: #e0f2f7; /* Light blue background */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content horizontally */
+            justify-content: center; /* Center content vertically */
+            min-height: 100vh; /* Ensure full viewport height */
+            margin: 0; /* Remove default margins */
+        }
+        h1 {
+            color: #1976d2; /* Darker blue title */
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2); /* Add shadow */
+            text-align: center; /* Center text within container */
+        }
+        label {
+            display: block; /* Make labels stack on top of inputs */
+            margin-bottom: 5px;
+            font-size: 1.2em;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #1976d2; /* Blue border */
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+        button {
+            background-color: #1976d2; /* Blue button */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1565c0; /* Darker blue on hover */
+        }
+        #hasil {
+            margin-top: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2e7d32; /* Green result */
+        }
+                /* Responsive design - Adjust layout for smaller screens */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            label {
+                font-size: 1.1em;
+            }
+            input[type="number"], button {
+                font-size: 1em;
+            }
+            #hasil {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Prediksi Skor Siswa</h1>
+    <div class="container">
+        <label for="jam_belajar">Jam Belajar:</label>
+        <input type="number" id="jam_belajar" step="0.1" required>
+        <button onclick="prediksi()">Prediksi</button>
+        <div id="hasil"></div>
+    </div>
+
+    <script>
+        function prediksi() {
+            const jam_belajar = document.getElementById('jam_belajar').value;
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'jam_belajar=' + jam_belajar
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('hasil').textContent = data.error;
+                } else {
+                    document.getElementById('hasil').textContent = 'Prediksi Skor: ' + data.skor;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
